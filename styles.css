@@ -1,0 +1,144 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ffebf0 0%, #ffd1dc 100%);
+    overflow: hidden;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.floating-heart {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+    opacity: 0.6;
+    animation: float 6s infinite;
+}
+
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.2);
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    width: 90%;
+}
+
+.title {
+    font-size: 2.5rem;
+    color: #ff69b4;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: gentleBounce 2s infinite;
+}
+
+.buttons {
+    margin-top: 20px;
+    animation: fadeIn 1s ease;
+}
+
+.btn {
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+#yes-btn {
+    background-color: #ff69b4;
+    color: white;
+    transform-origin: center;
+    animation: float 3s infinite;
+}
+
+#yes-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+}
+
+#no-btn {
+    background-color: #ff0000;
+    color: white;
+    position: relative;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 2rem;
+    color: #32cd32;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.hidden {
+    display: none;
+}
+
+.loading {
+    display: none;
+    margin: 20px auto;
+}
+
+.loading span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #ff69b4;
+    border-radius: 50%;
+    margin: 0 5px;
+    animation: loading 1s infinite;
+}
+
+.loading span:nth-child(2) { 
+    animation-delay: 0.2s; 
+}
+
+.loading span:nth-child(3) { 
+    animation-delay: 0.4s; 
+}
+
+.heart-svg {
+    fill: #ff69b4;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes loading {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(0, -10px); }
+}
+
+@keyframes gentleBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
