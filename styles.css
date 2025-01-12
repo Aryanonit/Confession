@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -8,6 +14,18 @@ body {
     align-items: center;
     background: linear-gradient(135deg, #ffebf0 0%, #ffd1dc 100%);
     overflow: hidden;
+}
+
+.music-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
 }
 
 .background {
@@ -52,6 +70,9 @@ body {
 .buttons {
     margin-top: 20px;
     animation: fadeIn 1s ease;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 
 .btn {
@@ -60,26 +81,25 @@ body {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    margin: 0 10px;
     transition: all 0.3s ease;
 }
 
-#yes-btn {
+.yes-btn {
     background-color: #ff69b4;
     color: white;
     transform-origin: center;
     animation: float 3s infinite;
 }
 
-#yes-btn:hover {
+.yes-btn:hover {
     transform: scale(1.1);
     box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
 }
 
-#no-btn {
+.no-btn {
     background-color: #ff0000;
     color: white;
-    position: relative;
+    transition: all 0.3s ease;
 }
 
 #message {

@@ -1,7 +1,13 @@
-// Add these at the start of your script.js
+// Get all necessary DOM elements
 const backgroundMusic = document.getElementById('backgroundMusic');
 const yesClickSound = document.getElementById('yesClickSound');
 const musicToggle = document.getElementById('musicToggle');
+const yesBtn = document.getElementById('yes-btn');
+const noBtn = document.getElementById('no-btn');
+const message = document.getElementById('message');
+const loading = document.querySelector('.loading');
+const question = document.getElementById('question');
+
 let isMusicPlaying = false;
 
 // Music toggle function
@@ -10,21 +16,33 @@ musicToggle.addEventListener('click', () => {
         backgroundMusic.pause();
         musicToggle.textContent = '🔈';
     } else {
-        backgroundMusic.play();
+        playBackgroundMusic();
         musicToggle.textContent = '🔊';
     }
     isMusicPlaying = !isMusicPlaying;
 });
 
+// Function to play background music with error handling
+function playBackgroundMusic() {
+    backgroundMusic.play().catch(error => {
+        console.log("Background music failed to play:", error);
+        // Retry playing after user interaction
+        document.addEventListener('click', () => {
+            backgroundMusic.play().catch(e => console.log("Retry failed:", e));
+        }, { once: true });
+    });
+}
+
 // Auto-play music on first interaction
 document.body.addEventListener('click', () => {
     if (!isMusicPlaying) {
-        backgroundMusic.play();
+        playBackgroundMusic();
         musicToggle.textContent = '🔊';
         isMusicPlaying = true;
     }
 }, { once: true });
 
+// Create floating hearts background
 function createFloatingHearts() {
     const background = document.querySelector('.background');
     const heartSVG = `
@@ -37,7 +55,6 @@ function createFloatingHearts() {
         heart.className = 'floating-heart';
         heart.innerHTML = heartSVG;
         heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.top = Math.random() * 100 + 'vh';
         heart.style.animationDelay = (Math.random() * 5) + 's';
         background.appendChild(heart);
     }
@@ -45,26 +62,27 @@ function createFloatingHearts() {
 
 createFloatingHearts();
 
-const yesBtn = document.getElementById('yes-btn');
-const noBtn = document.getElementById('no-btn');
-const message = document.getElementById('message');
-const loading = document.querySelector('.loading');
-const question = document.getElementById('question');
-
 // Yes button click handler
 yesBtn.addEventListener('click', () => {
-    yesClickSound.play();  // Play the click sound
+    // Play click sound with error handling
+    yesClickSound.play().catch(error => {
+        console.log("Click sound failed to play:", error);
+    });
+
+    // Hide buttons and question, show loading
     yesBtn.style.display = 'none';
     noBtn.style.display = 'none';
     question.style.display = 'none';
     loading.style.display = 'block';
 
+    // Show success message and confetti after delay
     setTimeout(() => {
         loading.style.display = 'none';
         message.textContent = "Thank you Queen! You got a Pookie! 👑✨💖";
         message.classList.remove('hidden');
         message.style.opacity = '1';
         
+        // Confetti animation
         const duration = 3 * 1000;
         const end = Date.now() + duration;
         
@@ -91,12 +109,50 @@ yesBtn.addEventListener('click', () => {
     }, 2000);
 });
 
-// No button hover handler
-noBtn.addEventListener('mouseover', () => {
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+// No button movement logic
+let lastMoveTime = 0;
+const moveDelay = 100; // Minimum time between moves in milliseconds
+
+function moveNoButton(e) {
+    const currentTime = Date.now();
+    if (currentTime - lastMoveTime < moveDelay) return;
     
-    noBtn.style.position = 'absolute';
-    noBtn.style.left = `${x}px`;
-    noBtn.style.top = `${y}px`;
+    const buttonRect = noBtn.getBoundingClientRect();
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    
+    // Calculate new position (move away from mouse)
+    let newX = buttonRect.left;
+    let newY = buttonRect.top;
+    
+    // Move horizontally
+    if (mouseX < buttonRect.left + buttonRect.width / 2) {
+        newX = Math.min(window.innerWidth - buttonRect.width, buttonRect.left + 100);
+    } else {
+        newX = Math.max(0, buttonRect.left - 100);
+    }
+    
+    // Move vertically
+    if (mouseY < buttonRect.top + buttonRect.height / 2) {
+        newY = Math.min(window.innerHeight - buttonRect.height, buttonRect.top + 100);
+    } else {
+        newY = Math.max(0, buttonRect.top - 100);
+    }
+    
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = `${newX}px`;
+    noBtn.style.top = `${newY}px`;
+    
+    lastMoveTime = currentTime;
+}
+
+noBtn.addEventListener('mouseover', moveNoButton);
+noBtn.addEventListener('mousemove', moveNoButton);
+
+// Reset no button position when mouse leaves window
+document.addEventListener('mouseleave', () => {
+    setTimeout(() => {
+        noBtn.style.position = 'static';
+        noBtn.style.transform = 'none';
+    }, 500);
 });
